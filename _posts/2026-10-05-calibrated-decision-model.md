@@ -476,22 +476,23 @@ With reward 1[correct] − (q − 1[correct])² and true success probability _p_
 
 ## Reproducing everything
 
-All the code is in the companion repository (**TODO: add public link before publishing**). Every number in this post came from these scripts on one NVIDIA GB10 GPU with Python 3.12.3, PyTorch 2.11.0 (CUDA 13.0), Transformers 5.12.1, and `Qwen/Qwen2.5-0.5B-Instruct`.
+All the code is in [sourabhXIII/calibrated-decision-model](https://github.com/sourabhXIII/calibrated-decision-model). Every number in this post came from these scripts on one NVIDIA GB10 GPU with Python 3.12.3, PyTorch 2.11.0 (CUDA 13.0), Transformers 5.12.1, and `Qwen/Qwen2.5-0.5B-Instruct`.
 
-| script                             | what it shows                                                                                                                                    |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ippd_branches.py`                 | builds the branch mask and positions, checks branches against solo runs and against the stacked prompt, one parallel decode step (fp32 and bf16) |
-| `cost_bench.py`                    | prefill time and memory for separate calls vs branches vs stacking                                                                               |
-| `calib_demo.py`                    | the toy calibration task: supervised, Brier, distillation from honest and overconfident teachers, Gaussian-noise RL                              |
-| `blog_data.py`                     | everything the figures plot, written to `outputs/blog_data.json`                                                                                 |
-| `blog/figures/src/make_figures.py` | draws every figure from that data, standard library only                                                                                         |
+| script                    | what it shows                                                                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ippd_branches.py`        | builds the branch mask and positions, checks branches against solo runs and against the stacked prompt, one parallel decode step (fp32 and bf16) |
+| `cost_bench.py`           | prefill time and memory for separate calls vs branches vs stacking                                                                               |
+| `calib_demo.py`           | the toy calibration task: supervised, Brier, distillation from honest and overconfident teachers, Gaussian-noise RL                              |
+| `blog_data.py`            | everything the figures plot, written to `outputs/blog_data.json`                                                                                 |
+| `figures/make_figures.py` | draws every figure from that data, standard library only                                                                                         |
 
 ```bash
-python ippd_branches.py                     # exactness check, fp32
+python ippd_branches.py --mask-json outputs/toy_mask.json   # exactness check, fp32
 python ippd_branches.py --attn sdpa --dtype bf16
 python cost_bench.py
 python calib_demo.py
-python blog_data.py                         # then: python ../blog/figures/src/make_figures.py
+python blog_data.py
+python figures/make_figures.py
 ```
 
 Timings will move with hardware and load.
