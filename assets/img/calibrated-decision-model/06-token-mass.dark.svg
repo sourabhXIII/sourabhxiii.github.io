@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="330" viewBox="0 0 780 330" role="img" aria-labelledby="t d"><title id="t">Where the probability mass sits for Q2</title><desc id="d">Next-token probabilities at Q2&#x27;s answer slot. &#x27; No&#x27; holds 0.79 and &#x27; Yes&#x27; 0.17; the label tokens &#x27; no&#x27; and &#x27; yes&#x27; hold 0.012 and 0.004. Renormalising over the label tokens alone gives no = 0.76 from 1.5% of the mass.</desc><style>
+  svg { --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ctx:#9a988f; --block:#2a2a28; --wash1:rgba(57,135,229,0.16); --wash2:rgba(217,89,38,0.16); --wash3:rgba(25,158,112,0.18); --washc:rgba(154,152,143,0.16); }
+  text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .bg { fill: var(--surface); }
+  .t2 { fill: var(--ink2); } .tm { fill: var(--muted); }
+  .title { font-size: 15px; font-weight: 600; } .sub { font-size: 12px; fill: var(--ink2); }
+  .lab { font-size: 12px; } .small { font-size: 11px; } .tick { font-size: 11px; fill: var(--muted);
+         font-variant-numeric: tabular-nums; }
+  .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; }
+  .f1 { fill: var(--s1); } .f2 { fill: var(--s2); } .f3 { fill: var(--s3); } .fc { fill: var(--ctx); }
+  .fb { fill: var(--block); } .fw1 { fill: var(--wash1); } .fw2 { fill: var(--wash2); }
+  .fw3 { fill: var(--wash3); } .fwc { fill: var(--washc); } .fs { fill: var(--surface); }
+  .l1 { stroke: var(--s1); } .l2 { stroke: var(--s2); } .l3 { stroke: var(--s3); } .lc { stroke: var(--ctx); }
+  .lm { stroke: var(--muted); } .lk { stroke: var(--ink2); } .ls { stroke: var(--surface); }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .thin { fill: none; stroke-width: 1.25; }
+  .box { fill: none; stroke: var(--axis); stroke-width: 1.25; }
+  .ring { stroke: var(--surface); stroke-width: 2; }
+</style><rect width="780" height="330" class="bg"/>
+<text x="20.0" y="26.0" class="title" text-anchor="start">The label tokens hold 1.5% of the probability</text>
+<text x="20.0" y="46.0" class="sub" text-anchor="start">Q2 &quot;Does the customer threaten to cancel?&quot;: top next tokens at the answer slot.</text>
+<text x="110.0" y="83.0" class="lab" text-anchor="end">␣No</text>
+<path d="M120.0,70.0 H447.6 Q451.6,70.0 451.6,74.0 V82.0 Q451.6,86.0 447.6,86.0 H120.0 Z" class="f2"/>
+<text x="457.6" y="82.0" class="small t2" text-anchor="start">0.790</text>
+<text x="110.0" y="109.0" class="lab" text-anchor="end">␣Yes</text>
+<path d="M120.0,96.0 H187.2 Q191.2,96.0 191.2,100.0 V108.0 Q191.2,112.0 187.2,112.0 H120.0 Z" class="f2"/>
+<text x="197.2" y="108.0" class="small t2" text-anchor="start">0.170</text>
+<text x="110.0" y="135.0" class="lab" text-anchor="end">␣no</text>
+<path d="M120.0,122.0 H120.9 Q124.9,122.0 124.9,126.0 V134.0 Q124.9,138.0 120.9,138.0 H120.0 Z" class="f1"/>
+<text x="130.9" y="134.0" class="small t2" text-anchor="start">0.012</text>
+<text x="110.0" y="161.0" class="lab" text-anchor="end">␣yes</text>
+<path d="M120.0,148.0 H120.0 Q121.6,148.0 121.6,149.6 V162.4 Q121.6,164.0 120.0,164.0 H120.0 Z" class="f1"/>
+<text x="127.6" y="160.0" class="small t2" text-anchor="start">0.004</text>
+<text x="110.0" y="187.0" class="lab" text-anchor="end">␣Ref</text>
+<path d="M120.0,174.0 H120.0 Q121.5,174.0 121.5,175.5 V188.5 Q121.5,190.0 120.0,190.0 H120.0 Z" class="fc"/>
+<text x="127.3" y="186.0" class="small t2" text-anchor="start">0.003</text>
+<text x="110.0" y="213.0" class="lab" text-anchor="end">␣**</text>
+<path d="M120.0,200.0 H120.0 Q121.5,200.0 121.5,201.5 V214.5 Q121.5,216.0 120.0,216.0 H120.0 Z" class="fc"/>
+<text x="127.3" y="212.0" class="small t2" text-anchor="start">0.003</text>
+<text x="110.0" y="239.0" class="lab" text-anchor="end">␣The</text>
+<path d="M120.0,226.0 H120.0 Q121.5,226.0 121.5,227.5 V240.5 Q121.5,242.0 120.0,242.0 H120.0 Z" class="fc"/>
+<text x="126.9" y="238.0" class="small t2" text-anchor="start">0.002</text>
+<text x="110.0" y="265.0" class="lab" text-anchor="end">␣\n</text>
+<path d="M120.0,252.0 H120.0 Q121.5,252.0 121.5,253.5 V266.5 Q121.5,268.0 120.0,268.0 H120.0 Z" class="fc"/>
+<text x="126.8" y="264.0" class="small t2" text-anchor="start">0.002</text>
+<line x1="120.0" y1="66.0" x2="120.0" y2="272.0" class="axis"/>
+<text x="590.0" y="96.0" class="lab" text-anchor="start" font-weight="600">Read only the label tokens</text>
+<text x="590.0" y="114.0" class="small t2" text-anchor="start">and renormalise:</text>
+<text x="590.0" y="134.0" class="small" text-anchor="start">no = 0.0117 / (0.0117 + 0.0037)</text>
+<text x="590.0" y="152.0" class="small" text-anchor="start">   = 0.76, from 1.5% of the mass</text>
+<text x="590.0" y="196.0" class="lab" text-anchor="start" font-weight="600">Pool case variants:</text>
+<text x="590.0" y="216.0" class="small" text-anchor="start">no = 0.82, from 97.5% of the mass</text>
+<rect x="20.0" y="291.0" width="12.0" height="12.0" rx="2" class="f1"/>
+<text x="37.0" y="301.0" class="small t2" text-anchor="start">label tokens we read</text>
+<rect x="191.0" y="291.0" width="12.0" height="12.0" rx="2" class="f2"/>
+<text x="208.0" y="301.0" class="small t2" text-anchor="start">same answers, other tokens</text>
+<rect x="401.6" y="291.0" width="12.0" height="12.0" rx="2" class="fc"/>
+<text x="418.6" y="301.0" class="small t2" text-anchor="start">everything else</text>
+<text x="20.0" y="320.0" class="small tm" text-anchor="start">␣ marks a leading space. Exact probabilities from the isolated run, Qwen2.5-0.5B-Instruct fp32.</text>
+</svg>

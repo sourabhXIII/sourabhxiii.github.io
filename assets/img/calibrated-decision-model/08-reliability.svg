@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="446" viewBox="0 0 780 446" role="img" aria-labelledby="t d"><title id="t">Reliability diagram for the toy task</title><desc id="d">Confidence vs accuracy in 10 bins. The supervised and RL students sit on the diagonal. The student distilled from an overconfident teacher sits below it: when it says 90% it is right about 75% of the time.</desc><style>
+  svg { --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --ctx:#7d7b75; --block:#ecebe6; --wash1:rgba(42,120,214,0.10); --wash2:rgba(235,104,52,0.10); --wash3:rgba(27,175,122,0.12); --washc:rgba(125,123,117,0.12); }
+  text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .bg { fill: var(--surface); }
+  .t2 { fill: var(--ink2); } .tm { fill: var(--muted); }
+  .title { font-size: 15px; font-weight: 600; } .sub { font-size: 12px; fill: var(--ink2); }
+  .lab { font-size: 12px; } .small { font-size: 11px; } .tick { font-size: 11px; fill: var(--muted);
+         font-variant-numeric: tabular-nums; }
+  .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; }
+  .f1 { fill: var(--s1); } .f2 { fill: var(--s2); } .f3 { fill: var(--s3); } .fc { fill: var(--ctx); }
+  .fb { fill: var(--block); } .fw1 { fill: var(--wash1); } .fw2 { fill: var(--wash2); }
+  .fw3 { fill: var(--wash3); } .fwc { fill: var(--washc); } .fs { fill: var(--surface); }
+  .l1 { stroke: var(--s1); } .l2 { stroke: var(--s2); } .l3 { stroke: var(--s3); } .lc { stroke: var(--ctx); }
+  .lm { stroke: var(--muted); } .lk { stroke: var(--ink2); } .ls { stroke: var(--surface); }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .thin { fill: none; stroke-width: 1.25; }
+  .box { fill: none; stroke: var(--axis); stroke-width: 1.25; }
+  .ring { stroke: var(--surface); stroke-width: 2; }
+</style><rect width="780" height="446" class="bg"/>
+<text x="20.0" y="26.0" class="title" text-anchor="start">Copy an overconfident teacher, get an overconfident student</text>
+<text x="20.0" y="46.0" class="sub" text-anchor="start">Toy task with known true probabilities. Each point: one confidence bin, 20,000 test inputs.</text>
+<line x1="80.0" y1="380.0" x2="380.0" y2="380.0" class="grid"/>
+<text x="72.0" y="384.0" class="tick" text-anchor="end">0.2</text>
+<line x1="80.0" y1="305.0" x2="380.0" y2="305.0" class="grid"/>
+<text x="72.0" y="309.0" class="tick" text-anchor="end">0.4</text>
+<line x1="80.0" y1="230.0" x2="380.0" y2="230.0" class="grid"/>
+<text x="72.0" y="234.0" class="tick" text-anchor="end">0.6</text>
+<line x1="80.0" y1="155.0" x2="380.0" y2="155.0" class="grid"/>
+<text x="72.0" y="159.0" class="tick" text-anchor="end">0.8</text>
+<line x1="80.0" y1="80.0" x2="380.0" y2="80.0" class="grid"/>
+<text x="72.0" y="84.0" class="tick" text-anchor="end">1.0</text>
+<line x1="80.0" y1="380.0" x2="380.0" y2="380.0" class="axis"/>
+<text x="36.0" y="230.0" class="small t2" text-anchor="middle" transform="rotate(-90 36.0 230.0)">accuracy in bin</text>
+<text x="80.0" y="396.0" class="tick" text-anchor="middle">0.2</text>
+<text x="155.0" y="396.0" class="tick" text-anchor="middle">0.4</text>
+<text x="230.0" y="396.0" class="tick" text-anchor="middle">0.6</text>
+<text x="305.0" y="396.0" class="tick" text-anchor="middle">0.8</text>
+<text x="380.0" y="396.0" class="tick" text-anchor="middle">1.0</text>
+<text x="230.0" y="414.0" class="small t2" text-anchor="middle">stated confidence</text>
+<line x1="80.0" y1="380.0" x2="380.0" y2="80.0" class="thin lm"/>
+<text x="368.8" y="77.8" class="small tm" text-anchor="end">perfect</text>
+<path d="M146.3,370.3 L179.0,304.9 L211.3,272.0 L249.0,249.3 L287.1,237.8 L325.3,207.7 L370.7,130.0" class="line l2"/>
+<circle cx="146.3" cy="370.3" r="4" class="f2 ring"/>
+<circle cx="179.0" cy="304.9" r="4" class="f2 ring"/>
+<circle cx="211.3" cy="272.0" r="4" class="f2 ring"/>
+<circle cx="249.0" cy="249.3" r="4" class="f2 ring"/>
+<circle cx="287.1" cy="237.8" r="4" class="f2 ring"/>
+<circle cx="325.3" cy="207.7" r="4" class="f2 ring"/>
+<circle cx="370.7" cy="130.0" r="4" class="f2 ring"/>
+<path d="M146.8,333.2 L178.0,283.3 L211.3,251.7 L249.5,218.8 L286.4,181.2 L324.4,145.4 L363.3,100.1" class="line l3"/>
+<circle cx="146.8" cy="333.2" r="4" class="f3 ring"/>
+<circle cx="178.0" cy="283.3" r="4" class="f3 ring"/>
+<circle cx="211.3" cy="251.7" r="4" class="f3 ring"/>
+<circle cx="249.5" cy="218.8" r="4" class="f3 ring"/>
+<circle cx="286.4" cy="181.2" r="4" class="f3 ring"/>
+<circle cx="324.4" cy="145.4" r="4" class="f3 ring"/>
+<circle cx="363.3" cy="100.1" r="4" class="f3 ring"/>
+<path d="M146.9,310.2 L177.8,284.7 L210.9,247.4 L248.6,215.1 L286.1,177.1 L324.1,141.6 L362.8,98.6" class="line l1"/>
+<circle cx="146.9" cy="310.2" r="4" class="f1 ring"/>
+<circle cx="177.8" cy="284.7" r="4" class="f1 ring"/>
+<circle cx="210.9" cy="247.4" r="4" class="f1 ring"/>
+<circle cx="248.6" cy="215.1" r="4" class="f1 ring"/>
+<circle cx="286.1" cy="177.1" r="4" class="f1 ring"/>
+<circle cx="324.1" cy="141.6" r="4" class="f1 ring"/>
+<circle cx="362.8" cy="98.6" r="4" class="f1 ring"/>
+<text x="331.3" y="241.5" class="small t2" text-anchor="start">says 85%,</text>
+<text x="331.3" y="256.5" class="small t2" text-anchor="start">right 66%</text>
+<text x="470.0" y="100.0" class="lab" text-anchor="start" font-weight="600">Final test numbers</text>
+<text x="470.0" y="126.0" class="small tm" text-anchor="start"></text>
+<text x="670.0" y="126.0" class="small tick" text-anchor="end">ECE</text>
+<text x="755.0" y="126.0" class="small tick" text-anchor="end">KL to truth</text>
+<text x="470.0" y="150.0" class="small" text-anchor="start">supervised (log loss)</text>
+<text x="670.0" y="150.0" class="small" text-anchor="end">0.008</text>
+<text x="755.0" y="150.0" class="small" text-anchor="end">0.010</text>
+<text x="470.0" y="174.0" class="small" text-anchor="start">RL, proper-score reward</text>
+<text x="670.0" y="174.0" class="small" text-anchor="end">0.016</text>
+<text x="755.0" y="174.0" class="small" text-anchor="end">0.009</text>
+<text x="470.0" y="198.0" class="small" text-anchor="start">distil, honest teacher</text>
+<text x="670.0" y="198.0" class="small" text-anchor="end">0.009</text>
+<text x="755.0" y="198.0" class="small" text-anchor="end">0.000</text>
+<text x="470.0" y="222.0" class="small" text-anchor="start">distil, overconfident</text>
+<text x="670.0" y="222.0" class="small" text-anchor="end">0.122</text>
+<text x="755.0" y="222.0" class="small" text-anchor="end">0.122</text>
+<text x="470.0" y="270.0" class="small t2" text-anchor="start">The honest-teacher student lands exactly</text>
+<text x="470.0" y="286.0" class="small t2" text-anchor="start">on the oracle, so it is not drawn.</text>
+<rect x="80.0" y="425.0" width="12.0" height="12.0" rx="2" class="f1"/>
+<text x="97.0" y="435.0" class="small t2" text-anchor="start">supervised</text>
+<rect x="185.0" y="425.0" width="12.0" height="12.0" rx="2" class="f3"/>
+<text x="202.0" y="435.0" class="small t2" text-anchor="start">RL</text>
+<rect x="237.2" y="425.0" width="12.0" height="12.0" rx="2" class="f2"/>
+<text x="254.2" y="435.0" class="small t2" text-anchor="start">student of overconfident teacher</text>
+</svg>

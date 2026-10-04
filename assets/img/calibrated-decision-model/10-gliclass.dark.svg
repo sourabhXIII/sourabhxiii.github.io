@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="364" viewBox="0 0 780 364" role="img" aria-labelledby="t d"><title id="t">How a GLiClass-style encoder scores labels</title><desc id="d">Labels and text go into one sequence with marker tokens. A bidirectional encoder reads everything. The hidden state at each label marker is scored against a pooled text vector, and a softmax over labels gives the answer distribution.</desc><style>
+  svg { --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ctx:#9a988f; --block:#2a2a28; --wash1:rgba(57,135,229,0.16); --wash2:rgba(217,89,38,0.16); --wash3:rgba(25,158,112,0.18); --washc:rgba(154,152,143,0.16); }
+  text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .bg { fill: var(--surface); }
+  .t2 { fill: var(--ink2); } .tm { fill: var(--muted); }
+  .title { font-size: 15px; font-weight: 600; } .sub { font-size: 12px; fill: var(--ink2); }
+  .lab { font-size: 12px; } .small { font-size: 11px; } .tick { font-size: 11px; fill: var(--muted);
+         font-variant-numeric: tabular-nums; }
+  .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; }
+  .f1 { fill: var(--s1); } .f2 { fill: var(--s2); } .f3 { fill: var(--s3); } .fc { fill: var(--ctx); }
+  .fb { fill: var(--block); } .fw1 { fill: var(--wash1); } .fw2 { fill: var(--wash2); }
+  .fw3 { fill: var(--wash3); } .fwc { fill: var(--washc); } .fs { fill: var(--surface); }
+  .l1 { stroke: var(--s1); } .l2 { stroke: var(--s2); } .l3 { stroke: var(--s3); } .lc { stroke: var(--ctx); }
+  .lm { stroke: var(--muted); } .lk { stroke: var(--ink2); } .ls { stroke: var(--surface); }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .thin { fill: none; stroke-width: 1.25; }
+  .box { fill: none; stroke: var(--axis); stroke-width: 1.25; }
+  .ring { stroke: var(--surface); stroke-width: 2; }
+</style><rect width="780" height="364" class="bg"/>
+<text x="20.0" y="26.0" class="title" text-anchor="start">Labels are part of the input, so they can change on every request</text>
+<rect x="20.0" y="296.0" width="70.7" height="26.0" rx="3" class="fc"/>
+<text x="55.3" y="313.0" class="small" text-anchor="middle">&lt;&lt;LABEL&gt;&gt;</text>
+<rect x="94.7" y="296.0" width="58.1" height="26.0" rx="3" class="f1"/>
+<text x="123.7" y="313.0" class="small" text-anchor="middle">billing</text>
+<rect x="156.8" y="296.0" width="70.7" height="26.0" rx="3" class="fc"/>
+<text x="192.1" y="313.0" class="small" text-anchor="middle">&lt;&lt;LABEL&gt;&gt;</text>
+<rect x="231.5" y="296.0" width="70.7" height="26.0" rx="3" class="f2"/>
+<text x="266.8" y="313.0" class="small" text-anchor="middle">technical</text>
+<rect x="306.2" y="296.0" width="70.7" height="26.0" rx="3" class="fc"/>
+<text x="341.5" y="313.0" class="small" text-anchor="middle">&lt;&lt;LABEL&gt;&gt;</text>
+<rect x="380.9" y="296.0" width="45.5" height="26.0" rx="3" class="f3"/>
+<text x="403.6" y="313.0" class="small" text-anchor="middle">other</text>
+<rect x="430.4" y="296.0" width="58.1" height="26.0" rx="3" class="fc"/>
+<text x="459.4" y="313.0" class="small" text-anchor="middle">&lt;&lt;SEP&gt;&gt;</text>
+<rect x="492.5" y="296.0" width="34.0" height="26.0" rx="3" class="fb"/>
+<text x="509.5" y="313.0" class="small" text-anchor="middle">We</text>
+<rect x="530.5" y="296.0" width="39.2" height="26.0" rx="3" class="fb"/>
+<text x="550.1" y="313.0" class="small" text-anchor="middle">were</text>
+<rect x="573.7" y="296.0" width="51.8" height="26.0" rx="3" class="fb"/>
+<text x="599.6" y="313.0" class="small" text-anchor="middle">billed</text>
+<rect x="629.5" y="296.0" width="45.5" height="26.0" rx="3" class="fb"/>
+<text x="652.2" y="313.0" class="small" text-anchor="middle">twice</text>
+<rect x="679.0" y="296.0" width="34.0" height="26.0" rx="3" class="fb"/>
+<text x="696.0" y="313.0" class="small" text-anchor="middle">…</text>
+<rect x="20.0" y="214.0" width="693.0" height="46.0" rx="6" class="fwc"/>
+<text x="366.5" y="241.0" class="lab" text-anchor="middle">bidirectional encoder: every token attends to every token</text>
+<line x1="55.3" y1="294.0" x2="55.3" y2="262.0" class="thin lm"/>
+<line x1="123.7" y1="294.0" x2="123.7" y2="262.0" class="thin lm"/>
+<line x1="192.1" y1="294.0" x2="192.1" y2="262.0" class="thin lm"/>
+<line x1="266.8" y1="294.0" x2="266.8" y2="262.0" class="thin lm"/>
+<line x1="341.5" y1="294.0" x2="341.5" y2="262.0" class="thin lm"/>
+<line x1="403.6" y1="294.0" x2="403.6" y2="262.0" class="thin lm"/>
+<line x1="459.4" y1="294.0" x2="459.4" y2="262.0" class="thin lm"/>
+<line x1="509.5" y1="294.0" x2="509.5" y2="262.0" class="thin lm"/>
+<line x1="550.1" y1="294.0" x2="550.1" y2="262.0" class="thin lm"/>
+<line x1="599.6" y1="294.0" x2="599.6" y2="262.0" class="thin lm"/>
+<line x1="652.2" y1="294.0" x2="652.2" y2="262.0" class="thin lm"/>
+<line x1="696.0" y1="294.0" x2="696.0" y2="262.0" class="thin lm"/>
+<line x1="55.3" y1="212.0" x2="55.3" y2="182.0" class="thin lm"/>
+<rect x="46.3" y="160.0" width="18.0" height="22.0" rx="3" class="f1"/>
+<line x1="192.1" y1="212.0" x2="192.1" y2="182.0" class="thin lm"/>
+<rect x="183.1" y="160.0" width="18.0" height="22.0" rx="3" class="f2"/>
+<line x1="341.5" y1="212.0" x2="341.5" y2="182.0" class="thin lm"/>
+<rect x="332.5" y="160.0" width="18.0" height="22.0" rx="3" class="f3"/>
+<path d="M496.5,212 Q602.8,186 709.0,212" class="thin lm"/>
+<line x1="602.8" y1="199.0" x2="602.8" y2="182.0" class="thin lm"/>
+<rect x="593.8" y="160.0" width="18.0" height="22.0" rx="3" class="fc"/>
+<text x="616.8" y="175.0" class="small t2" text-anchor="start">pooled text</text>
+<rect x="20.0" y="56.0" width="693.0" height="70.0" rx="6" class="fwc"/>
+<text x="34.0" y="82.0" class="lab" text-anchor="start" font-weight="600">score each (pooled text, label vector) pair</text>
+<text x="34.0" y="102.0" class="small t2" text-anchor="start">then softmax over the labels in this request</text>
+<line x1="55.3" y1="158.0" x2="55.3" y2="129.0" class="thin lm"/>
+<path d="M58.4,135.3 L55.3,129.0 L52.3,135.3" class="thin lm"/>
+<line x1="192.1" y1="158.0" x2="192.1" y2="129.0" class="thin lm"/>
+<path d="M195.2,135.3 L192.1,129.0 L189.1,135.3" class="thin lm"/>
+<line x1="341.5" y1="158.0" x2="341.5" y2="129.0" class="thin lm"/>
+<path d="M344.6,135.3 L341.5,129.0 L338.5,135.3" class="thin lm"/>
+<line x1="602.8" y1="158.0" x2="602.8" y2="129.0" class="thin lm"/>
+<path d="M605.8,135.3 L602.8,129.0 L599.7,135.3" class="thin lm"/>
+<text x="523.0" y="78.0" class="small" text-anchor="end">billing</text>
+<path d="M529.0,68.0 H636.8 Q640.8,68.0 640.8,72.0 V76.0 Q640.8,80.0 636.8,80.0 H529.0 Z" class="f1"/>
+<text x="646.8" y="78.0" class="small t2" text-anchor="start">0.86</text>
+<text x="523.0" y="96.0" class="small" text-anchor="end">technical</text>
+<path d="M529.0,86.0 H531.5 Q535.5,86.0 535.5,90.0 V94.0 Q535.5,98.0 531.5,98.0 H529.0 Z" class="f2"/>
+<text x="541.5" y="96.0" class="small t2" text-anchor="start">0.05</text>
+<text x="523.0" y="114.0" class="small" text-anchor="end">other</text>
+<path d="M529.0,104.0 H536.7 Q540.7,104.0 540.7,108.0 V112.0 Q540.7,116.0 536.7,116.0 H529.0 Z" class="f3"/>
+<text x="546.7" y="114.0" class="small t2" text-anchor="start">0.09</text>
+<text x="20.0" y="350.0" class="small tm" text-anchor="start">Illustrative probabilities. Input format from Knowledgator/GLiClass (uni-encoder): &lt;&lt;LABEL&gt;&gt;label ... &lt;&lt;SEP&gt;&gt;text.</text>
+</svg>

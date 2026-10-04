@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="320" viewBox="0 0 780 320" role="img" aria-labelledby="t d"><title id="t">RL gradient direction vs supervised gradient direction</title><desc id="d">Histogram of the cosine similarity between the RL gradient estimate and the exact supervised log-loss gradient, over 200 batches. Mean 0.95, minimum 0.90.</desc><style>
+  svg { --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --ctx:#7d7b75; --block:#ecebe6; --wash1:rgba(42,120,214,0.10); --wash2:rgba(235,104,52,0.10); --wash3:rgba(27,175,122,0.12); --washc:rgba(125,123,117,0.12); }
+  text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .bg { fill: var(--surface); }
+  .t2 { fill: var(--ink2); } .tm { fill: var(--muted); }
+  .title { font-size: 15px; font-weight: 600; } .sub { font-size: 12px; fill: var(--ink2); }
+  .lab { font-size: 12px; } .small { font-size: 11px; } .tick { font-size: 11px; fill: var(--muted);
+         font-variant-numeric: tabular-nums; }
+  .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; }
+  .f1 { fill: var(--s1); } .f2 { fill: var(--s2); } .f3 { fill: var(--s3); } .fc { fill: var(--ctx); }
+  .fb { fill: var(--block); } .fw1 { fill: var(--wash1); } .fw2 { fill: var(--wash2); }
+  .fw3 { fill: var(--wash3); } .fwc { fill: var(--washc); } .fs { fill: var(--surface); }
+  .l1 { stroke: var(--s1); } .l2 { stroke: var(--s2); } .l3 { stroke: var(--s3); } .lc { stroke: var(--ctx); }
+  .lm { stroke: var(--muted); } .lk { stroke: var(--ink2); } .ls { stroke: var(--surface); }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .thin { fill: none; stroke-width: 1.25; }
+  .box { fill: none; stroke: var(--axis); stroke-width: 1.25; }
+  .ring { stroke: var(--surface); stroke-width: 2; }
+</style><rect width="780" height="320" class="bg"/>
+<text x="20.0" y="26.0" class="title" text-anchor="start">The RL update points where supervised learning points</text>
+<text x="20.0" y="46.0" class="sub" text-anchor="start">Cosine similarity between the Gaussian-noise RL gradient and the log-loss gradient, 200 batches of 256 (1.0 = same direction).</text>
+<line x1="80.0" y1="260.0" x2="720.0" y2="260.0" class="grid"/>
+<text x="72.0" y="264.0" class="tick" text-anchor="end">0</text>
+<line x1="80.0" y1="224.0" x2="720.0" y2="224.0" class="grid"/>
+<text x="72.0" y="228.0" class="tick" text-anchor="end">10</text>
+<line x1="80.0" y1="188.0" x2="720.0" y2="188.0" class="grid"/>
+<text x="72.0" y="192.0" class="tick" text-anchor="end">20</text>
+<line x1="80.0" y1="152.0" x2="720.0" y2="152.0" class="grid"/>
+<text x="72.0" y="156.0" class="tick" text-anchor="end">30</text>
+<line x1="80.0" y1="116.0" x2="720.0" y2="116.0" class="grid"/>
+<text x="72.0" y="120.0" class="tick" text-anchor="end">40</text>
+<line x1="80.0" y1="80.0" x2="720.0" y2="80.0" class="grid"/>
+<text x="72.0" y="84.0" class="tick" text-anchor="end">50</text>
+<line x1="80.0" y1="260.0" x2="720.0" y2="260.0" class="axis"/>
+<text x="36.0" y="170.0" class="small t2" text-anchor="middle" transform="rotate(-90 36.0 170.0)">batches</text>
+<text x="80.0" y="276.0" class="tick" text-anchor="middle">0.88</text>
+<text x="186.7" y="276.0" class="tick" text-anchor="middle">0.90</text>
+<text x="293.3" y="276.0" class="tick" text-anchor="middle">0.92</text>
+<text x="400.0" y="276.0" class="tick" text-anchor="middle">0.94</text>
+<text x="506.7" y="276.0" class="tick" text-anchor="middle">0.96</text>
+<text x="613.3" y="276.0" class="tick" text-anchor="middle">0.98</text>
+<text x="720.0" y="276.0" class="tick" text-anchor="middle">1.00</text>
+<text x="400.0" y="294.0" class="small t2" text-anchor="middle">cosine similarity</text>
+<path d="M187.7,260.0 V253.2 Q187.7,249.2 191.7,249.2 H208.3 Q212.3,249.2 212.3,253.2 V260.0 Z" class="f1"/>
+<path d="M214.3,260.0 V260.0 Q214.3,256.4 217.9,256.4 H235.4 Q239.0,256.4 239.0,260.0 V260.0 Z" class="f1"/>
+<path d="M241.0,260.0 V260.0 Q241.0,256.4 244.6,256.4 H262.1 Q265.7,256.4 265.7,260.0 V260.0 Z" class="f1"/>
+<path d="M294.3,260.0 V256.8 Q294.3,252.8 298.3,252.8 H315.0 Q319.0,252.8 319.0,256.8 V260.0 Z" class="f1"/>
+<path d="M321.0,260.0 V238.8 Q321.0,234.8 325.0,234.8 H341.7 Q345.7,234.8 345.7,238.8 V260.0 Z" class="f1"/>
+<path d="M347.7,260.0 V242.4 Q347.7,238.4 351.7,238.4 H368.3 Q372.3,238.4 372.3,242.4 V260.0 Z" class="f1"/>
+<path d="M374.3,260.0 V220.8 Q374.3,216.8 378.3,216.8 H395.0 Q399.0,216.8 399.0,220.8 V260.0 Z" class="f1"/>
+<path d="M401.0,260.0 V188.4 Q401.0,184.4 405.0,184.4 H421.7 Q425.7,184.4 425.7,188.4 V260.0 Z" class="f1"/>
+<path d="M427.7,260.0 V206.4 Q427.7,202.4 431.7,202.4 H448.3 Q452.3,202.4 452.3,206.4 V260.0 Z" class="f1"/>
+<path d="M454.3,260.0 V195.6 Q454.3,191.6 458.3,191.6 H475.0 Q479.0,191.6 479.0,195.6 V260.0 Z" class="f1"/>
+<path d="M481.0,260.0 V156.0 Q481.0,152.0 485.0,152.0 H501.7 Q505.7,152.0 505.7,156.0 V260.0 Z" class="f1"/>
+<path d="M507.7,260.0 V159.6 Q507.7,155.6 511.7,155.6 H528.3 Q532.3,155.6 532.3,159.6 V260.0 Z" class="f1"/>
+<path d="M534.3,260.0 V181.2 Q534.3,177.2 538.3,177.2 H555.0 Q559.0,177.2 559.0,181.2 V260.0 Z" class="f1"/>
+<path d="M561.0,260.0 V199.2 Q561.0,195.2 565.0,195.2 H581.7 Q585.7,195.2 585.7,199.2 V260.0 Z" class="f1"/>
+<path d="M587.7,260.0 V235.2 Q587.7,231.2 591.7,231.2 H608.3 Q612.3,231.2 612.3,235.2 V260.0 Z" class="f1"/>
+<path d="M614.3,260.0 V249.6 Q614.3,245.6 618.3,245.6 H635.0 Q639.0,245.6 639.0,249.6 V260.0 Z" class="f1"/>
+<line x1="478.2" y1="80.0" x2="478.2" y2="260.0" class="thin lk"/>
+<text x="472.2" y="92.0" class="small" text-anchor="end">mean 0.95</text>
+</svg>

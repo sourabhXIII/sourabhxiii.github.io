@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="230" viewBox="0 0 780 230" role="img" aria-labelledby="t d"><title id="t">An incoherent pair of isolated answers</title><desc id="d">A implies B, so P(B) must be at least P(A). Isolated branches can output P(A) = 0.8 and P(B) = 0.6 for the same invoice.</desc><style>
+  svg { --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ctx:#9a988f; --block:#2a2a28; --wash1:rgba(57,135,229,0.16); --wash2:rgba(217,89,38,0.16); --wash3:rgba(25,158,112,0.18); --washc:rgba(154,152,143,0.16); }
+  text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .bg { fill: var(--surface); }
+  .t2 { fill: var(--ink2); } .tm { fill: var(--muted); }
+  .title { font-size: 15px; font-weight: 600; } .sub { font-size: 12px; fill: var(--ink2); }
+  .lab { font-size: 12px; } .small { font-size: 11px; } .tick { font-size: 11px; fill: var(--muted);
+         font-variant-numeric: tabular-nums; }
+  .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; }
+  .f1 { fill: var(--s1); } .f2 { fill: var(--s2); } .f3 { fill: var(--s3); } .fc { fill: var(--ctx); }
+  .fb { fill: var(--block); } .fw1 { fill: var(--wash1); } .fw2 { fill: var(--wash2); }
+  .fw3 { fill: var(--wash3); } .fwc { fill: var(--washc); } .fs { fill: var(--surface); }
+  .l1 { stroke: var(--s1); } .l2 { stroke: var(--s2); } .l3 { stroke: var(--s3); } .lc { stroke: var(--ctx); }
+  .lm { stroke: var(--muted); } .lk { stroke: var(--ink2); } .ls { stroke: var(--surface); }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .thin { fill: none; stroke-width: 1.25; }
+  .box { fill: none; stroke: var(--axis); stroke-width: 1.25; }
+  .ring { stroke: var(--surface); stroke-width: 2; }
+</style><rect width="780" height="230" class="bg"/>
+<text x="20.0" y="26.0" class="title" text-anchor="start">When one question implies another</text>
+<text x="20.0" y="46.0" class="sub" text-anchor="start">A = &quot;invoice exceeds the PO by more than 10%&quot;   B = &quot;invoice exceeds the PO&quot;   A implies B, so P(B) ≥ P(A).</text>
+<line x1="60.0" y1="115.0" x2="720.0" y2="115.0" class="axis"/>
+<line x1="60.0" y1="111.0" x2="60.0" y2="119.0" class="axis"/>
+<text x="60.0" y="138.0" class="tick" text-anchor="middle">0</text>
+<line x1="225.0" y1="111.0" x2="225.0" y2="119.0" class="axis"/>
+<text x="225.0" y="138.0" class="tick" text-anchor="middle">0.25</text>
+<line x1="390.0" y1="111.0" x2="390.0" y2="119.0" class="axis"/>
+<text x="390.0" y="138.0" class="tick" text-anchor="middle">0.5</text>
+<line x1="555.0" y1="111.0" x2="555.0" y2="119.0" class="axis"/>
+<text x="555.0" y="138.0" class="tick" text-anchor="middle">0.75</text>
+<line x1="720.0" y1="111.0" x2="720.0" y2="119.0" class="axis"/>
+<text x="720.0" y="138.0" class="tick" text-anchor="middle">1</text>
+<rect x="588.0" y="103.0" width="132.0" height="24.0" rx="3" class="fw1"/>
+<text x="654.0" y="96.0" class="small t2" text-anchor="middle">where P(B) must be</text>
+<circle cx="588.0" cy="115.0" r="6" class="f1 ring"/>
+<text x="588.0" y="160.0" class="small" text-anchor="middle">P(A) = 0.80</text>
+<circle cx="456.0" cy="115.0" r="6" class="f2 ring"/>
+<text x="456.0" y="160.0" class="small" text-anchor="middle">P(B) = 0.60</text>
+<line x1="469.2" y1="180.0" x2="581.4" y2="180.0" class="thin l2"/>
+<path d="M575.1,183.0 L581.4,180.0 L575.1,177.0" class="thin l2"/>
+<text x="525.3" y="200.0" class="small t2" text-anchor="middle">violation</text>
+<text x="20.0" y="222.0" class="small tm" text-anchor="start">Each number can still be calibrated on average across many invoices. Calibration is a property of groups, coherence is a property of each input.</text>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="344" viewBox="0 0 780 344" role="img" aria-labelledby="t d"><title id="t">Proper scoring rules reward reporting the truth</title><desc id="d">Expected log loss and Brier score when the true chance of rain is 70%, as a function of the reported probability. Both are lowest at exactly 70%. Exaggerating to 90% costs 0.765 vs 0.611 in log loss and 0.250 vs 0.210 in Brier.</desc><style>
+  svg { --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ctx:#9a988f; --block:#2a2a28; --wash1:rgba(57,135,229,0.16); --wash2:rgba(217,89,38,0.16); --wash3:rgba(25,158,112,0.18); --washc:rgba(154,152,143,0.16); }
+  text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .bg { fill: var(--surface); }
+  .t2 { fill: var(--ink2); } .tm { fill: var(--muted); }
+  .title { font-size: 15px; font-weight: 600; } .sub { font-size: 12px; fill: var(--ink2); }
+  .lab { font-size: 12px; } .small { font-size: 11px; } .tick { font-size: 11px; fill: var(--muted);
+         font-variant-numeric: tabular-nums; }
+  .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; }
+  .f1 { fill: var(--s1); } .f2 { fill: var(--s2); } .f3 { fill: var(--s3); } .fc { fill: var(--ctx); }
+  .fb { fill: var(--block); } .fw1 { fill: var(--wash1); } .fw2 { fill: var(--wash2); }
+  .fw3 { fill: var(--wash3); } .fwc { fill: var(--washc); } .fs { fill: var(--surface); }
+  .l1 { stroke: var(--s1); } .l2 { stroke: var(--s2); } .l3 { stroke: var(--s3); } .lc { stroke: var(--ctx); }
+  .lm { stroke: var(--muted); } .lk { stroke: var(--ink2); } .ls { stroke: var(--surface); }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .thin { fill: none; stroke-width: 1.25; }
+  .box { fill: none; stroke: var(--axis); stroke-width: 1.25; }
+  .ring { stroke: var(--surface); stroke-width: 2; }
+</style><rect width="780" height="344" class="bg"/>
+<text x="20.0" y="26.0" class="title" text-anchor="start">Lying costs you, in expectation</text>
+<text x="20.0" y="46.0" class="sub" text-anchor="start">The true chance of rain is 70%. Expected penalty for each forecast you could announce (lower is better).</text>
+<text x="70.0" y="80.0" class="lab" text-anchor="start" font-weight="600">Log loss</text>
+<line x1="70.0" y1="270.0" x2="330.0" y2="270.0" class="grid"/>
+<text x="62.0" y="274.0" class="tick" text-anchor="end">0</text>
+<line x1="70.0" y1="225.0" x2="330.0" y2="225.0" class="grid"/>
+<text x="62.0" y="229.0" class="tick" text-anchor="end">0.5</text>
+<line x1="70.0" y1="180.0" x2="330.0" y2="180.0" class="grid"/>
+<text x="62.0" y="184.0" class="tick" text-anchor="end">1</text>
+<line x1="70.0" y1="135.0" x2="330.0" y2="135.0" class="grid"/>
+<text x="62.0" y="139.0" class="tick" text-anchor="end">1.5</text>
+<line x1="70.0" y1="90.0" x2="330.0" y2="90.0" class="grid"/>
+<text x="62.0" y="94.0" class="tick" text-anchor="end">2</text>
+<line x1="70.0" y1="270.0" x2="330.0" y2="270.0" class="axis"/>
+<text x="26.0" y="180.0" class="small t2" text-anchor="middle" transform="rotate(-90 26.0 180.0)">expected penalty</text>
+<text x="70.0" y="286.0" class="tick" text-anchor="middle">0</text>
+<text x="135.0" y="286.0" class="tick" text-anchor="middle">0.25</text>
+<text x="200.0" y="286.0" class="tick" text-anchor="middle">0.5</text>
+<text x="265.0" y="286.0" class="tick" text-anchor="middle">0.75</text>
+<text x="330.0" y="286.0" class="tick" text-anchor="middle">1</text>
+<text x="200.0" y="304.0" class="small t2" text-anchor="middle">announced probability of rain</text>
+<path d="M85.6,91.1 L88.2,100.5 L90.8,108.6 L93.4,115.8 L96.0,122.1 L98.6,127.8 L101.2,133.0 L103.8,137.7 L106.4,142.1 L109.0,146.1 L111.6,149.8 L114.2,153.3 L116.8,156.6 L119.4,159.7 L122.0,162.6 L124.6,165.3 L127.2,167.9 L129.8,170.4 L132.4,172.7 L135.0,174.9 L137.6,177.0 L140.2,179.0 L142.8,180.9 L145.4,182.8 L148.0,184.5 L150.6,186.2 L153.2,187.8 L155.8,189.3 L158.4,190.8 L161.0,192.2 L163.6,193.6 L166.2,194.9 L168.8,196.1 L171.4,197.3 L174.0,198.5 L176.6,199.6 L179.2,200.6 L181.8,201.7 L184.4,202.6 L187.0,203.6 L189.6,204.4 L192.2,205.3 L194.8,206.1 L197.4,206.9 L200.0,207.6 L202.6,208.3 L205.2,209.0 L207.8,209.6 L210.4,210.2 L213.0,210.8 L215.6,211.3 L218.2,211.8 L220.8,212.3 L223.4,212.7 L226.0,213.1 L228.6,213.4 L231.2,213.8 L233.8,214.0 L236.4,214.3 L239.0,214.5 L241.6,214.7 L244.2,214.8 L246.8,214.9 L249.4,215.0 L252.0,215.0 L254.6,215.0 L257.2,214.9 L259.8,214.8 L262.4,214.7 L265.0,214.4 L267.6,214.2 L270.2,213.9 L272.8,213.5 L275.4,213.0 L278.0,212.5 L280.6,211.9 L283.2,211.2 L285.8,210.4 L288.4,209.5 L291.0,208.5 L293.6,207.4 L296.2,206.1 L298.8,204.7 L301.4,203.1 L304.0,201.2 L306.6,199.0 L309.2,196.6 L311.8,193.6 L314.4,190.1 L317.0,185.9 L319.6,180.5 L322.2,173.4 L324.8,163.1" class="line l1"/>
+<circle cx="252.0" cy="215.0" r="5" class="f1 ring"/>
+<text x="248.0" y="239.0" class="small" text-anchor="end">honest 70%: 0.611</text>
+<circle cx="304.0" cy="201.2" r="5" class="f2 ring"/>
+<text x="294.0" y="185.2" class="small" text-anchor="end">exaggerate 90%: 0.765</text>
+<text x="450.0" y="80.0" class="lab" text-anchor="start" font-weight="600">Brier score</text>
+<line x1="450.0" y1="270.0" x2="710.0" y2="270.0" class="grid"/>
+<text x="442.0" y="274.0" class="tick" text-anchor="end">0</text>
+<line x1="450.0" y1="225.0" x2="710.0" y2="225.0" class="grid"/>
+<text x="442.0" y="229.0" class="tick" text-anchor="end">0.2</text>
+<line x1="450.0" y1="180.0" x2="710.0" y2="180.0" class="grid"/>
+<text x="442.0" y="184.0" class="tick" text-anchor="end">0.4</text>
+<line x1="450.0" y1="135.0" x2="710.0" y2="135.0" class="grid"/>
+<text x="442.0" y="139.0" class="tick" text-anchor="end">0.6</text>
+<line x1="450.0" y1="90.0" x2="710.0" y2="90.0" class="grid"/>
+<text x="442.0" y="94.0" class="tick" text-anchor="end">0.8</text>
+<line x1="450.0" y1="270.0" x2="710.0" y2="270.0" class="axis"/>
+<text x="450.0" y="286.0" class="tick" text-anchor="middle">0</text>
+<text x="515.0" y="286.0" class="tick" text-anchor="middle">0.25</text>
+<text x="580.0" y="286.0" class="tick" text-anchor="middle">0.5</text>
+<text x="645.0" y="286.0" class="tick" text-anchor="middle">0.75</text>
+<text x="710.0" y="286.0" class="tick" text-anchor="middle">1</text>
+<text x="580.0" y="304.0" class="small t2" text-anchor="middle">announced probability of rain</text>
+<path d="M465.6,130.6 L468.2,133.4 L470.8,136.3 L473.4,139.0 L476.0,141.8 L478.6,144.4 L481.2,147.1 L483.8,149.6 L486.4,152.2 L489.0,154.7 L491.6,157.1 L494.2,159.5 L496.8,161.9 L499.4,164.2 L502.0,166.5 L504.6,168.7 L507.2,170.9 L509.8,173.0 L512.4,175.1 L515.0,177.2 L517.6,179.2 L520.2,181.1 L522.8,183.1 L525.4,184.9 L528.0,186.8 L530.6,188.5 L533.2,190.3 L535.8,191.9 L538.4,193.6 L541.0,195.2 L543.6,196.7 L546.2,198.2 L548.8,199.7 L551.4,201.1 L554.0,202.5 L556.6,203.8 L559.2,205.1 L561.8,206.3 L564.4,207.5 L567.0,208.7 L569.6,209.8 L572.2,210.8 L574.8,211.9 L577.4,212.8 L580.0,213.8 L582.6,214.6 L585.2,215.5 L587.8,216.2 L590.4,217.0 L593.0,217.7 L595.6,218.3 L598.2,218.9 L600.8,219.5 L603.4,220.0 L606.0,220.5 L608.6,220.9 L611.2,221.3 L613.8,221.6 L616.4,221.9 L619.0,222.2 L621.6,222.4 L624.2,222.5 L626.8,222.7 L629.4,222.7 L632.0,222.8 L634.6,222.7 L637.2,222.7 L639.8,222.5 L642.4,222.4 L645.0,222.2 L647.6,221.9 L650.2,221.6 L652.8,221.3 L655.4,220.9 L658.0,220.5 L660.6,220.0 L663.2,219.5 L665.8,218.9 L668.4,218.3 L671.0,217.7 L673.6,217.0 L676.2,216.2 L678.8,215.5 L681.4,214.6 L684.0,213.8 L686.6,212.8 L689.2,211.9 L691.8,210.8 L694.4,209.8 L697.0,208.7 L699.6,207.5 L702.2,206.3 L704.8,205.1" class="line l1"/>
+<circle cx="632.0" cy="222.8" r="5" class="f1 ring"/>
+<text x="628.0" y="246.8" class="small" text-anchor="end">honest 70%: 0.210</text>
+<circle cx="684.0" cy="213.8" r="5" class="f2 ring"/>
+<text x="674.0" y="197.8" class="small" text-anchor="end">exaggerate 90%: 0.250</text>
+<text x="20.0" y="334.0" class="small t2" text-anchor="start">Same picture for any true probability: the curve bottoms out exactly at the truth. That is what &quot;proper&quot; means.</text>
+</svg>
