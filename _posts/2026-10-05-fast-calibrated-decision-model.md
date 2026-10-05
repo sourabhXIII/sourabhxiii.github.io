@@ -2,7 +2,7 @@
 layout: post
 title: "Building a fast, calibrated decision model from public parts, and what it can't do"
 date: 2026-10-05 00:00:00 +0530
-description: Branch masks, proper scoring and typed answer heads, built and measured on a small open model.
+description: A System 1 for software. Branch masks, proper scoring and typed answer heads, built and measured on a small open model.
 tags: llm calibration inference
 categories: ml
 toc:
@@ -53,8 +53,8 @@ And you get back, in one call, a calibrated probability distribution for every q
 Say you have a 1,200-token ticket and thirty questions about it. There are two obvious ways to ask them, and both are bad.
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/01-three-ways.svg' | relative_url }}" alt="Three ways to ask three questions about one document: separate calls, one stacked prompt, and one prompt with branches." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/01-three-ways.dark.svg' | relative_url }}" alt="Three ways to ask three questions about one document: separate calls, one stacked prompt, and one prompt with branches." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/01-three-ways.svg' | relative_url }}" alt="Three ways to ask three questions about one document: separate calls, one stacked prompt, and one prompt with branches." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/01-three-ways.dark.svg' | relative_url }}" alt="Three ways to ask three questions about one document: separate calls, one stacked prompt, and one prompt with branches." loading="lazy" data-zoomable>
 </figure>
 
 **Separate calls** (option 1) give clean answers, but you pay to process the ticket thirty times. For a 1,200-token ticket and thirty short questions, that's nearly 38,000 tokens of prefill to get thirty answers.
@@ -62,11 +62,11 @@ Say you have a 1,200-token ticket and thirty questions about it. There are two o
 **Stacking every question into one prompt** (option 2) processes the ticket once. But a decoder reads left to right, so by question 20 the model has read questions 1 to 19 as well, and they leak into its answer. You might think the effect is small. It isn't:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/02-leakage.svg' | relative_url }}" alt="Bar chart. For Q2 &quot;does the customer threaten to cancel&quot;, isolated answers give yes 0.24, no 0.76; the stacked prompt gives yes 0.54, no 0.46. For Q3 &quot;how urgent&quot;, isolated gives medium 0.54; stacked gives medium 0.01 and high 0.71." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/02-leakage.dark.svg' | relative_url }}" alt="Bar chart. For Q2 &quot;does the customer threaten to cancel&quot;, isolated answers give yes 0.24, no 0.76; the stacked prompt gives yes 0.54, no 0.46. For Q3 &quot;how urgent&quot;, isolated gives medium 0.54; stacked gives medium 0.01 and high 0.71." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/02-leakage.svg' | relative_url }}" alt="Bar chart. For Q2 &quot;does the customer threaten to cancel&quot;, isolated answers give yes 0.24, no 0.76; the stacked prompt gives yes 0.54, no 0.46. For Q3 &quot;how urgent&quot;, isolated gives medium 0.54; stacked gives medium 0.01 and high 0.71." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/02-leakage.dark.svg' | relative_url }}" alt="Bar chart. For Q2 &quot;does the customer threaten to cancel&quot;, isolated answers give yes 0.24, no 0.76; the stacked prompt gives yes 0.54, no 0.46. For Q3 &quot;how urgent&quot;, isolated gives medium 0.54; stacked gives medium 0.01 and high 0.71." loading="lazy" data-zoomable>
 </figure>
 
-That's Qwen2.5-0.5B-Instruct answering three questions about the same billing ticket. Q1 ("which department?") comes first, so nothing precedes it and it's unaffected. Q2 flips from "no" to a coin toss. Q3 goes from "medium" to "high" with 71% probability, because by the time the model reads Q3 it has just seen two other questions about billing and cancellation, and that pushes urgency up. The logits move by 14 to 15 points. This isn't noise. The later questions are answering a different prompt.
+That's Qwen2.5-0.5B-Instruct answering three questions about a short billing ticket I wrote for this post (the exact text is in [the appendix](#appendix-b-the-example-inputs)). Q1 ("which department?") comes first, so nothing precedes it and it's unaffected. Q2 flips from "no" to a coin toss. Q3 goes from "medium" to "high" with 71% probability, because by the time the model reads Q3 it has just seen two other questions about billing and cancellation, and that pushes urgency up. The logits move by 14 to 15 points. This isn't noise. The later questions are answering a different prompt.
 
 What we want is option 3: read the ticket once, and give each question its own private view of it, as if it were the only question asked.
 
@@ -82,8 +82,8 @@ Change those two and you change what the model thinks the sequence is. The metho
 **Lie one: the mask.** Each question may look at the context and at its own earlier tokens, and at nothing else. Here's the plain causal mask next to the branch mask for a toy layout:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/03-mask.svg' | relative_url }}" alt="Two attention mask grids. Left: plain causal mask, where question tokens can see earlier questions (marked with !). Right: IPPD mask, where each question block is a small triangle that sees the full context and only its own tokens." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/03-mask.dark.svg' | relative_url }}" alt="Two attention mask grids. Left: plain causal mask, where question tokens can see earlier questions (marked with !). Right: IPPD mask, where each question block is a small triangle that sees the full context and only its own tokens." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/03-mask.svg' | relative_url }}" alt="Two attention mask grids. Left: plain causal mask, where question tokens can see earlier questions (marked with !). Right: IPPD mask, where each question block is a small triangle that sees the full context and only its own tokens." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/03-mask.dark.svg' | relative_url }}" alt="Two attention mask grids. Left: plain causal mask, where question tokens can see earlier questions (marked with !). Right: IPPD mask, where each question block is a small triangle that sees the full context and only its own tokens." loading="lazy" data-zoomable>
 </figure>
 
 Every "!" on the left is a question reading a different question. On the right, each question is a small causal triangle hanging off the shared context, and it can't see its neighbours.
@@ -91,8 +91,8 @@ Every "!" on the left is a question reading a different question. On the right, 
 **Lie two: the position IDs.** If Q2 just carried on numbering from where Q1 ended, it would think it sat at position 9, after some invisible tokens. So every question restarts its numbering right after the context:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/04-positions.svg' | relative_url }}" alt="Two rows of numbered token boxes. Memory index runs 0 to 14. Position IDs run 0 to 5 for the context, then restart at 6 for each of the three questions." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/04-positions.dark.svg' | relative_url }}" alt="Two rows of numbered token boxes. Memory index runs 0 to 14. Position IDs run 0 to 5 for the context, then restart at 6 for each of the three questions." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/04-positions.svg' | relative_url }}" alt="Two rows of numbered token boxes. Memory index runs 0 to 14. Position IDs run 0 to 5 for the context, then restart at 6 for each of the three questions." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/04-positions.dark.svg' | relative_url }}" alt="Two rows of numbered token boxes. Memory index runs 0 to 14. Position IDs run 0 to 5 for the context, then restart at 6 for each of the three questions." loading="lazy" data-zoomable>
 </figure>
 
 As far as the model can tell, each question begins at position 6, straight after a 6-token context, exactly where it would sit if you'd asked it alone.
@@ -180,8 +180,8 @@ one stacked pass:  C + M × q
 Here's the wall-clock time on one GPU (an NVIDIA GB10), for single-token answers:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/05-cost.svg' | relative_url }}" alt="Two log-scale line charts of prefill time vs number of questions. With a 125-token context, separate calls rise from 10 to 238 ms at 64 questions while branches go from 10 to 41 ms. With a 1,241-token context, separate calls rise from 29 to 2,349 ms while branches go from 34 to 88 ms." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/05-cost.dark.svg' | relative_url }}" alt="Two log-scale line charts of prefill time vs number of questions. With a 125-token context, separate calls rise from 10 to 238 ms at 64 questions while branches go from 10 to 41 ms. With a 1,241-token context, separate calls rise from 29 to 2,349 ms while branches go from 34 to 88 ms." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/05-cost.svg' | relative_url }}" alt="Two log-scale line charts of prefill time vs number of questions. With a 125-token context, separate calls rise from 10 to 238 ms at 64 questions while branches go from 10 to 41 ms. With a 1,241-token context, separate calls rise from 29 to 2,349 ms while branches go from 34 to 88 ms." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/05-cost.dark.svg' | relative_url }}" alt="Two log-scale line charts of prefill time vs number of questions. With a 125-token context, separate calls rise from 10 to 238 ms at 64 questions while branches go from 10 to 41 ms. With a 1,241-token context, separate calls rise from 29 to 2,349 ms while branches go from 34 to 88 ms." loading="lazy" data-zoomable>
 </figure>
 
 | context   | questions | separate calls | branches | stacked (leaks) | speed-up | peak memory, separate vs branches |
@@ -191,7 +191,9 @@ Here's the wall-clock time on one GPU (an NVIDIA GB10), for single-token answers
 | 1,241 tok | 32        | 1,193 ms       | 56 ms    | 44 ms           | 21×      | 3.1 vs 1.3 GB                     |
 | 1,241 tok | 64        | 2,349 ms       | 88 ms    | 62 ms           | 27×      | 5.1 vs 1.4 GB                     |
 
-With a 1,200-token ticket, asking 64 questions costs about 2.6 times what asking one does. That's the shape TypeSafe's docs claim for Jev, "adding questions barely changes the response time", and you can see where it comes from.
+One honest note on the inputs: the 1,241-token context is the same short ticket repeated 40 times, and the questions are one template with a number changed ([appendix](#appendix-b-the-example-inputs)). Prefill time depends on how many tokens there are, not on what they say, so this is fine for timing, but it isn't a realistic document.
+
+With a 1,200-token context, asking 64 questions costs about 2.6 times what asking one does. That's the shape TypeSafe's docs claim for Jev, "adding questions barely changes the response time", and you can see where it comes from.
 
 Three honest caveats:
 
@@ -210,8 +212,8 @@ Two relatives are worth knowing. "Parallel Decoding in One Sequence" ([Yu et al.
 Go back to Q2. Our branch said "no" with probability 0.76. Where did that 0.76 come from? We took the model's next-token distribution, kept only the two label tokens `" yes"` and `" no"`, and renormalised. Here's what the full distribution actually looked like:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/06-token-mass.svg' | relative_url }}" alt="Horizontal bar chart of the top next tokens for Q2. &quot; No&quot; has 0.790 and &quot; Yes&quot; 0.170; the label tokens &quot; no&quot; and &quot; yes&quot; have only 0.0117 and 0.0037. Renormalising over the label tokens gives no = 0.76 from 1.5% of the mass; pooling case variants gives no = 0.82 from 97.5%." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/06-token-mass.dark.svg' | relative_url }}" alt="Horizontal bar chart of the top next tokens for Q2. &quot; No&quot; has 0.790 and &quot; Yes&quot; 0.170; the label tokens &quot; no&quot; and &quot; yes&quot; have only 0.0117 and 0.0037. Renormalising over the label tokens gives no = 0.76 from 1.5% of the mass; pooling case variants gives no = 0.82 from 97.5%." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/06-token-mass.svg' | relative_url }}" alt="Horizontal bar chart of the top next tokens for Q2. &quot; No&quot; has 0.790 and &quot; Yes&quot; 0.170; the label tokens &quot; no&quot; and &quot; yes&quot; have only 0.0117 and 0.0037. Renormalising over the label tokens gives no = 0.76 from 1.5% of the mass; pooling case variants gives no = 0.82 from 97.5%." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/06-token-mass.dark.svg' | relative_url }}" alt="Horizontal bar chart of the top next tokens for Q2. &quot; No&quot; has 0.790 and &quot; Yes&quot; 0.170; the label tokens &quot; no&quot; and &quot; yes&quot; have only 0.0117 and 0.0037. Renormalising over the label tokens gives no = 0.76 from 1.5% of the mass; pooling case variants gives no = 0.82 from 97.5%." loading="lazy" data-zoomable>
 </figure>
 
 The model put its probability on `" No"` and `" Yes"` with capital letters. The lowercase labels we read held **1.5%** of the mass between them. Our confident-looking 0.76 is the ratio of two crumbs.
@@ -227,8 +229,8 @@ The best mental model for calibration is a weather forecaster. They're calibrate
 Now imagine you pay the forecaster according to a scoring rule. Which rules make honesty their best strategy? The ones called **proper**. Under a proper scoring rule, the forecaster's expected penalty is lowest when they announce exactly what they believe. Here's what that looks like when the true chance of rain is 70%:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/07-proper-scores.svg' | relative_url }}" alt="Two line charts of expected penalty vs announced probability when the true chance is 70%. Log loss bottoms out at 0.611 at exactly 70%; announcing 90% costs 0.765. Brier score bottoms out at 0.210 at 70%; announcing 90% costs 0.250." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/07-proper-scores.dark.svg' | relative_url }}" alt="Two line charts of expected penalty vs announced probability when the true chance is 70%. Log loss bottoms out at 0.611 at exactly 70%; announcing 90% costs 0.765. Brier score bottoms out at 0.210 at 70%; announcing 90% costs 0.250." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/07-proper-scores.svg' | relative_url }}" alt="Two line charts of expected penalty vs announced probability when the true chance is 70%. Log loss bottoms out at 0.611 at exactly 70%; announcing 90% costs 0.765. Brier score bottoms out at 0.210 at 70%; announcing 90% costs 0.250." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/07-proper-scores.dark.svg' | relative_url }}" alt="Two line charts of expected penalty vs announced probability when the true chance is 70%. Log loss bottoms out at 0.611 at exactly 70%; announcing 90% costs 0.765. Brier score bottoms out at 0.210 at 70%; announcing 90% costs 0.250." loading="lazy" data-zoomable>
 </figure>
 
 Both curves bottom out exactly at the truth. Exaggerate to 90% and you pay more on average. Hedge toward 50% and you also pay more. For the log loss, the reason fits in one line. If the true distribution is _p_ and you report _q_, your expected penalty is
@@ -254,8 +256,8 @@ The first term doesn't depend on the student. So training on soft labels with cr
 Here's that catch on a toy problem where we know the true probabilities: 8-dimensional inputs, 3 answers, labels sampled from a known distribution so even a perfect model is uncertain. We train the same small model several ways and draw a reliability diagram. Each point is a bin of predictions; a calibrated model sits on the diagonal.
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/08-reliability.svg' | relative_url }}" alt="Reliability diagram. Supervised and RL students lie on the diagonal. The student of an overconfident teacher lies well below it; at 85% stated confidence it is right 66% of the time. Table: ECE 0.008 supervised, 0.016 RL, 0.009 honest-teacher student, 0.122 overconfident-teacher student." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/08-reliability.dark.svg' | relative_url }}" alt="Reliability diagram. Supervised and RL students lie on the diagonal. The student of an overconfident teacher lies well below it; at 85% stated confidence it is right 66% of the time. Table: ECE 0.008 supervised, 0.016 RL, 0.009 honest-teacher student, 0.122 overconfident-teacher student." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/08-reliability.svg' | relative_url }}" alt="Reliability diagram. Supervised and RL students lie on the diagonal. The student of an overconfident teacher lies well below it; at 85% stated confidence it is right 66% of the time. Table: ECE 0.008 supervised, 0.016 RL, 0.009 honest-teacher student, 0.122 overconfident-teacher student." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/08-reliability.dark.svg' | relative_url }}" alt="Reliability diagram. Supervised and RL students lie on the diagonal. The student of an overconfident teacher lies well below it; at 85% stated confidence it is right 66% of the time. Table: ECE 0.008 supervised, 0.016 RL, 0.009 honest-teacher student, 0.122 overconfident-teacher student." loading="lazy" data-zoomable>
 </figure>
 
 The student trained on an _overconfident_ teacher (the true logits doubled) has the same accuracy as a perfect model, 73.5%. But its calibration error jumps from 0.009 to 0.122. When it says 85%, it's right 66% of the time. And the student is trained perfectly: its distance from the truth (KL 0.122) is exactly its teacher's. No amount of student capacity fixes this, because the student is doing precisely what it was asked. Only real labels pull it back toward the truth. Mix them in with weight α and the target becomes α × truth + (1 − α) × teacher.
@@ -301,8 +303,8 @@ def rl_step(logits, y, sigma=0.25, samples=4):
 Compare its gradient to the plain supervised log-loss gradient on the same batches:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/09-grad-cosine.svg' | relative_url }}" alt="Histogram of cosine similarity between the RL gradient and the supervised gradient over 200 batches. Values lie between 0.90 and 0.98 with a mean of 0.95." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/09-grad-cosine.dark.svg' | relative_url }}" alt="Histogram of cosine similarity between the RL gradient and the supervised gradient over 200 batches. Values lie between 0.90 and 0.98 with a mean of 0.95." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/09-grad-cosine.svg' | relative_url }}" alt="Histogram of cosine similarity between the RL gradient and the supervised gradient over 200 batches. Values lie between 0.90 and 0.98 with a mean of 0.95." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/09-grad-cosine.dark.svg' | relative_url }}" alt="Histogram of cosine similarity between the RL gradient and the supervised gradient over 200 batches. Values lie between 0.90 and 0.98 with a mean of 0.95." loading="lazy" data-zoomable>
 </figure>
 
 They point the same way, with a cosine of 0.95 on average. That's no coincidence. There's an identity, Stein's lemma, that says this Gaussian-noise estimator is exactly the expected _supervised_ gradient evaluated at slightly noisy logits ([appendix](#a3-the-gaussian-policy-gradient-is-a-noisy-supervised-gradient)). Trained to the end, it lands where supervised training lands: calibration error 0.016 vs 0.008, and 0.008 for both if you give RL ten times more steps.
@@ -331,8 +333,8 @@ So far the "answer" has been the first token of a label, read off a vocabulary. 
 GLiClass ([Knowledgator](https://github.com/Knowledgator/GLiClass)) is the cleanest open example:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/10-gliclass.svg' | relative_url }}" alt="Diagram. A token row: &lt;&lt;LABEL&gt;&gt; billing &lt;&lt;LABEL&gt;&gt; technical &lt;&lt;LABEL&gt;&gt; other &lt;&lt;SEP&gt;&gt; followed by the text. A bidirectional encoder reads all of it. Hidden states at each label marker become label vectors, the text tokens are pooled into one vector, and a scorer compares each label vector with the text vector before a softmax over labels." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/10-gliclass.dark.svg' | relative_url }}" alt="Diagram. A token row: &lt;&lt;LABEL&gt;&gt; billing &lt;&lt;LABEL&gt;&gt; technical &lt;&lt;LABEL&gt;&gt; other &lt;&lt;SEP&gt;&gt; followed by the text. A bidirectional encoder reads all of it. Hidden states at each label marker become label vectors, the text tokens are pooled into one vector, and a scorer compares each label vector with the text vector before a softmax over labels." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/10-gliclass.svg' | relative_url }}" alt="Diagram. A token row: &lt;&lt;LABEL&gt;&gt; billing &lt;&lt;LABEL&gt;&gt; technical &lt;&lt;LABEL&gt;&gt; other &lt;&lt;SEP&gt;&gt; followed by the text. A bidirectional encoder reads all of it. Hidden states at each label marker become label vectors, the text tokens are pooled into one vector, and a scorer compares each label vector with the text vector before a softmax over labels." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/10-gliclass.dark.svg' | relative_url }}" alt="Diagram. A token row: &lt;&lt;LABEL&gt;&gt; billing &lt;&lt;LABEL&gt;&gt; technical &lt;&lt;LABEL&gt;&gt; other &lt;&lt;SEP&gt;&gt; followed by the text. A bidirectional encoder reads all of it. Hidden states at each label marker become label vectors, the text tokens are pooled into one vector, and a scorer compares each label vector with the text vector before a softmax over labels." loading="lazy" data-zoomable>
 </figure>
 
 The options are written into the input, each behind a marker token. A bidirectional encoder reads everything at once, so every label can attend to the text and to the other labels. The hidden state at each marker becomes that option's vector, the text is pooled into one vector, and a small scorer compares them. A softmax over the options gives the answer.
@@ -346,8 +348,8 @@ Two open projects rebuild the whole typed interface on this idea. **OpenJev** ([
 On its home turf OpenJev is good: 95% accuracy on held-out Banking77, with a calibration error around 1%. On TypeSafe's published workflow cases it's a different story:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/12-eval-by-type.svg' | relative_url }}" alt="Grouped bar chart of agreement with TypeSafe&#x27;s frontier-model reference by question type. Jev: yes/no 93%, choice 90%, score 74%, overall 91%. OpenJev: 61%, 26%, 15%, 48%." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/12-eval-by-type.dark.svg' | relative_url }}" alt="Grouped bar chart of agreement with TypeSafe&#x27;s frontier-model reference by question type. Jev: yes/no 93%, choice 90%, score 74%, overall 91%. OpenJev: 61%, 26%, 15%, 48%." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/12-eval-by-type.svg' | relative_url }}" alt="Grouped bar chart of agreement with TypeSafe&#x27;s frontier-model reference by question type. Jev: yes/no 93%, choice 90%, score 74%, overall 91%. OpenJev: 61%, 26%, 15%, 48%." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/12-eval-by-type.dark.svg' | relative_url }}" alt="Grouped bar chart of agreement with TypeSafe&#x27;s frontier-model reference by question type. Jev: yes/no 93%, choice 90%, score 74%, overall 91%. OpenJev: 61%, 26%, 15%, 48%." loading="lazy" data-zoomable>
 </figure>
 
 Before you read that as "small encoders can't do this", look at what's actually being measured (all from the [eval script](https://github.com/Heman10x-NGU/Verdict-open-jev/blob/main/scripts/exp_external_eval.py) in the repo):
@@ -364,8 +366,8 @@ So this is mostly a measurement of training data and domain fit. It still tells 
 There's also a structural difference between the two ways of building this:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/11-layouts.svg' | relative_url }}" alt="Diagram. Top: three encoder rows, each with one question plus options followed by a full copy of the state, so the state is encoded three times. Bottom: one decoder row with the state once followed by three question branches." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/11-layouts.dark.svg' | relative_url }}" alt="Diagram. Top: three encoder rows, each with one question plus options followed by a full copy of the state, so the state is encoded three times. Bottom: one decoder row with the state once followed by three question branches." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/11-layouts.svg' | relative_url }}" alt="Diagram. Top: three encoder rows, each with one question plus options followed by a full copy of the state, so the state is encoded three times. Bottom: one decoder row with the state once followed by three question branches." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/11-layouts.dark.svg' | relative_url }}" alt="Diagram. Top: three encoder rows, each with one question plus options followed by a full copy of the state, so the state is encoded three times. Bottom: one decoder row with the state once followed by three question branches." loading="lazy" data-zoomable>
 </figure>
 
 The open encoder replicas put each question in its own row with a full copy of the state. That keeps questions isolated for free, but the state is read once per question: option 1 from Part 1. A decoder with branch masks reads the state once. Within a question, the encoder lets options attend to each other in both directions, while a decoder reads them in order. That's one plausible reason for a quirk TypeSafe documents in Jev: it "leans toward the option that comes first" ([docs](https://docs.typesafe.ai/model-jaggedness/jev-1.13)). OpenJev shows order effects too (3% of answers flip when you reverse the options), so this isn't conclusive.
@@ -377,8 +379,8 @@ The open encoder replicas put each question in its own row with a full copy of t
 Here's the simplest system consistent with what TypeSafe has said publicly. Each box is tagged with how much we actually know.
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/13-sketch.svg' | relative_url }}" alt="Pipeline diagram: state (documented, read once), question branches (documented, isolated and parallel), branch masks with shared prefix (inferred), option-slot head with no vocabulary readout (inferred), typed answers with probabilities and confidence (documented). Training: synthetic states and typed questions (documented), labels from frontier-model probabilities with a proper-score loss (inferred), RLCD on top (guess)." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/13-sketch.dark.svg' | relative_url }}" alt="Pipeline diagram: state (documented, read once), question branches (documented, isolated and parallel), branch masks with shared prefix (inferred), option-slot head with no vocabulary readout (inferred), typed answers with probabilities and confidence (documented). Training: synthetic states and typed questions (documented), labels from frontier-model probabilities with a proper-score loss (inferred), RLCD on top (guess)." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/13-sketch.svg' | relative_url }}" alt="Pipeline diagram: state (documented, read once), question branches (documented, isolated and parallel), branch masks with shared prefix (inferred), option-slot head with no vocabulary readout (inferred), typed answers with probabilities and confidence (documented). Training: synthetic states and typed questions (documented), labels from frontier-model probabilities with a proper-score loss (inferred), RLCD on top (guess)." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/13-sketch.dark.svg' | relative_url }}" alt="Pipeline diagram: state (documented, read once), question branches (documented, isolated and parallel), branch masks with shared prefix (inferred), option-slot head with no vocabulary readout (inferred), typed answers with probabilities and confidence (documented). Training: synthetic states and typed questions (documented), labels from frontier-model probabilities with a proper-score loss (inferred), RLCD on top (guess)." loading="lazy" data-zoomable>
 </figure>
 
 What the docs say directly ([docs.typesafe.ai](https://docs.typesafe.ai/)):
@@ -402,17 +404,17 @@ Isolation is the feature that makes all of this fast and predictable. It's also 
 Here's why that matters. Take two yes/no questions about a support ticket, A ("does the customer threaten to cancel?") and B ("are they likely to churn this quarter?"), and a workflow rule: escalate if both are true.
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/14-joint.svg' | relative_url }}" alt="Two mosaic squares with the same marginals, P(A) = 0.70 and P(B) = 0.60. Left: multiplying isolated answers implies A and B are both true 42% of the time. Right: when the questions are correlated, the true joint rate can be 58%." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/14-joint.dark.svg' | relative_url }}" alt="Two mosaic squares with the same marginals, P(A) = 0.70 and P(B) = 0.60. Left: multiplying isolated answers implies A and B are both true 42% of the time. Right: when the questions are correlated, the true joint rate can be 58%." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/14-joint.svg' | relative_url }}" alt="Two mosaic squares with the same marginals, P(A) = 0.70 and P(B) = 0.60. Left: multiplying isolated answers implies A and B are both true 42% of the time. Right: when the questions are correlated, the true joint rate can be 58%." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/14-joint.dark.svg' | relative_url }}" alt="Two mosaic squares with the same marginals, P(A) = 0.70 and P(B) = 0.60. Left: multiplying isolated answers implies A and B are both true 42% of the time. Right: when the questions are correlated, the true joint rate can be 58%." loading="lazy" data-zoomable>
 </figure>
 
-Suppose the model's answers are perfectly calibrated _one question at a time_: P(A) = 0.70 and P(B) = 0.60, and both are right on average. Your code multiplies them and gets 0.42. But A and B aren't independent: people who threaten to cancel often do churn. The true rate of "both" can be 0.58. Every calibration check you run on the individual answers passes, and the number your workflow acts on is off by 16 points.
+Suppose (these are illustrative numbers, not a measurement) the model's answers are perfectly calibrated _one question at a time_: P(A) = 0.70 and P(B) = 0.60, and both are right on average. Your code multiplies them and gets 0.42. But A and B aren't independent: people who threaten to cancel often do churn. The true rate of "both" can be 0.58. Every calibration check you run on the individual answers passes, and the number your workflow acts on is off by 16 points.
 
 It gets sharper when one question logically implies another:
 
 <figure class="post-fig">
-  <img class="fig-light img-fluid" src="{{ '/assets/img/calibrated-decision-model/15-implication.svg' | relative_url }}" alt="Number line. A = invoice exceeds the PO by more than 10%, B = invoice exceeds the PO. A implies B, so P(B) must be at least P(A). Isolated branches output P(A) = 0.80 and P(B) = 0.60, a violation." loading="lazy" data-zoomable>
-  <img class="fig-dark img-fluid" src="{{ '/assets/img/calibrated-decision-model/15-implication.dark.svg' | relative_url }}" alt="Number line. A = invoice exceeds the PO by more than 10%, B = invoice exceeds the PO. A implies B, so P(B) must be at least P(A). Isolated branches output P(A) = 0.80 and P(B) = 0.60, a violation." loading="lazy" data-zoomable>
+  <img class="fig-light img-fluid" src="{{ '/assets/img/decision-model/15-implication.svg' | relative_url }}" alt="Number line. A = invoice exceeds the PO by more than 10%, B = invoice exceeds the PO. A implies B, so P(B) must be at least P(A). Isolated branches output P(A) = 0.80 and P(B) = 0.60, a violation." loading="lazy" data-zoomable>
+  <img class="fig-dark img-fluid" src="{{ '/assets/img/decision-model/15-implication.dark.svg' | relative_url }}" alt="Number line. A = invoice exceeds the PO by more than 10%, B = invoice exceeds the PO. A implies B, so P(B) must be at least P(A). Isolated branches output P(A) = 0.80 and P(B) = 0.60, a violation." loading="lazy" data-zoomable>
 </figure>
 
 If the invoice is more than 10% over the purchase order, it's certainly over the purchase order. Any coherent set of beliefs has P(B) ≥ P(A). Isolated branches can say 0.80 and 0.60 for the same invoice, and each number can still be calibrated on average across thousands of invoices. **Calibration is a property of groups of predictions; coherence is a property of each input.** A per-question proper score never sees two answers together, so nothing in training penalises the contradiction.
@@ -433,7 +435,7 @@ If I were picking one experiment to run next, it would be this: take the public 
 
 Strip away the product and the interface comes down to three ideas, each of which fits in a few lines:
 
-- **Branches.** An attention mask plus restarted position IDs give every question a private, exact view of a shared document. It needs no training, it's one prefill for any number of questions, and it was 27× faster than separate calls at 64 questions on a 1,200-token document.
+- **Branches.** An attention mask plus restarted position IDs give every question a private, exact view of a shared document. It needs no training, it's one prefill for any number of questions, and it was 27× faster than separate calls at 64 questions over a 1,200-token context.
 - **Honest probabilities.** Train against a proper scoring rule, on labels or a teacher's distribution, and calibration follows. For one-shot answers, RL with a proper-score reward converges to the same place, only noisier. The real risk is a miscalibrated teacher, not the choice of optimiser.
 - **Answer slots.** Score declared options directly instead of reading vocabulary tokens. Labels can change per request, and renormalisation bias disappears.
 
@@ -471,6 +473,56 @@ The right-hand side is the direct gradient of the score, averaged over slightly 
 ### A4. Why RLCR needs a bounded score
 
 With reward 1[correct] − (q − 1[correct])² and true success probability _p_, the expected reward is p² − (q − p)². That's maximised at q = p, and the maximum p² increases with _p_, so the model also prefers its most likely answer. With log loss instead of Brier, the expected reward at q = p is p − H(p), which isn't increasing in _p_. A near-certain _wrong_ answer (p ≈ 0) scores higher than a coin-flip one. That's why the bound matters.
+
+---
+
+## Appendix B: the example inputs
+
+No dataset was used. Every input in this post is either written by hand or generated, and here they are in full.
+
+### The support ticket (Parts 1 and 2)
+
+One shared context, exactly as the model saw it, followed by three questions. Each question ends at `Answer:`, which is where the answer token is read. The context is 58 tokens and the questions are 18, 16 and 17 tokens in Qwen2.5's tokenizer.
+
+```text
+You read a customer support ticket and answer questions about it. Answer each question with a single word.
+
+Ticket: Hi, we were billed twice for March on invoice INV-2207. Please refund the duplicate charge today, otherwise we will cancel our plan and move to another provider.
+```
+
+|     | question text                                                                                   | typed labels read out                    |
+| --- | ----------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Q1  | `Question: Which department should handle this ticket: billing, technical, or sales?` `Answer:` | `" billing"`, `" technical"`, `" sales"` |
+| Q2  | `Question: Does the customer threaten to cancel? Answer yes or no.` `Answer:`                   | `" yes"`, `" no"`                        |
+| Q3  | `Question: How urgent is this ticket: low, medium, or high?` `Answer:`                          | `" low"`, `" medium"`, `" high"`         |
+
+For the typed readout, we take the next-token logits at each question's last token, keep only the first token of each label, and apply a softmax over those (Part 2 explains why that's a shortcut with problems).
+
+### The cost benchmark (Part 1)
+
+The context is this ticket text repeated 4 times (125 tokens) or 40 times (1,241 tokens):
+
+```text
+Hi, we were billed twice for March on invoice INV-2207. Please refund the duplicate charge today, otherwise we will cancel our plan.
+```
+
+The M questions (1 to 64) come from one template, with _i_ running from 0 to M − 1:
+
+```text
+Question: Is fact number {i} in the ticket above true? Answer yes or no.
+Answer:
+```
+
+Only token counts matter for prefill time, so the repetition doesn't affect the timings. It does mean the answers themselves are meaningless, and they aren't used.
+
+### The toy calibration task (Parts 2 and 3)
+
+<!-- prettier-ignore -->
+Fully synthetic, seed 0. Inputs are 8-dimensional standard Gaussian vectors. There are 3 answers, and the true answer distribution is p\*(y | x) = softmax(W\* x), with W\* drawn once as Gaussian × 0.8. Labels are *sampled* from p\*, so even the perfect model is uncertain: its accuracy is 73.5%. There are 20,000 training and 20,000 test points. Every method trains the same linear model (3 × 8 weights) for 3,000 Adam steps, learning rate 0.05, batch 256. The "overconfident teacher" is softmax(2 · W\* x): the true logits doubled, so it ranks answers correctly but is too sure of them.
+
+### The examples in Part 6
+
+The churn example (P(A) = 0.70, P(B) = 0.60, joint 0.58) and the invoice example (P(A) = 0.80, P(B) = 0.60) are illustrative numbers chosen to show the effect. They are not measurements from any model.
 
 ---
 
